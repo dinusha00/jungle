@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<div id="root">
+	<div class="container">
+    	<div class="row">
+        	<div class="twelve columns">
+        		<h2><img src="/jungle/images/banner.png" height="100" width="250"/> </h2>
+            	<h1>Jungle V1.0.0</h1>
+                <h6>
+                	Welcome to jungle application.
+                	Below are the requested ip addresses for the authorization and validation
+                </h6>
+                <ul>
+                    <li v-for="request in requests">
+                        <h5>
+                            Source: <a>{{request.sourceIp}}</a>
+                            Destination: <a>{{request.destinationIp}}</a>
+                            <button v-on:click="requestValidate(request)">Validate</button>
+                            <button v-on:click="requestReset(request)">Reset</button>
+                            <b>Status: <a>{{request.status}}</a></b>
+                        </h5>
+                        <hr />
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+	<script src="/jungle/js/vue.min.js"></script>
+	<script src="/jungle/js/axios.min.js"></script>
+</div>
+
+<script>
+var app = new Vue({
+	el: '#root',
+    data : {
+    		requests: [],
+    		subItems: [],
+    		currentId: -1,
+    		currency: 0,
+  		  	amount: 0,
+  		  	breakdown: null
+    },
+    mounted(){
+    	this.fetchRequests();
+	},
+    methods: {
+  		fetchRequests(){
+        	axios.get("/jungle/request").then(function(response){
+            	this.requests = response.data;
+            }.bind(this));
+        },
+        requestValidate(request){
+        	var self = this;
+        	self.currentId = -1;
+        	console.log(window.location.href +'/request/'+ request.id +'/validate');
+        	axios.get(window.location.href +'/request/'+ request.id +'/validate').then(function(response){
+        		self.currentId = request.id;
+        		self.subItems = response.data;
+      		});
+      		location.reload();
+      	},
+      	requestReset(request){
+        	var self = this;
+        	self.currentId = -1;
+        	console.log(window.location.href +'/request/'+ request.id +'/reset');
+        	axios.get(window.location.href +'/request/'+ request.id +'/reset').then(function(response){
+        		self.currentId = request.id;
+        		self.subItems = response.data;
+      		});
+      		location.reload();
+      	}
+    }
+});
+
+</script>
+</body>
+</html>
