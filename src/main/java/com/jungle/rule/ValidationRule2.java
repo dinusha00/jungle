@@ -40,11 +40,8 @@ public class ValidationRule2 extends ValidationBase implements ValidationRuleBas
 		ruleName = RuleName.RULE2;
 		final String sourceIpInNonProdList = getViolatedIps(request.getSourceIp(), validationServiceHolder, Type.NON_PROD);
 		final String destinationIpInProdList = getViolatedIps(request.getDestinationIp(), validationServiceHolder, Type.PROD);
-		if (sourceIpInNonProdList.isEmpty() != destinationIpInProdList.isEmpty()) {
-			// PASS
-			logger.info(this.getClass().getSimpleName() + " validationErrors [PASS]");
-			auditType = AuditType.SUCCESS;
-		} else {
+		if (!sourceIpInNonProdList.isEmpty() && !destinationIpInProdList.isEmpty()) {
+			// FAIL
 			logger.info(this.getClass().getSimpleName() + " validationErrors [FAILED]");
 			if (!sourceIpInNonProdList.isEmpty()) {
 				errorDetail += (" (" + Type.PROD + ":" + sourceIpInNonProdList + ")");
@@ -54,8 +51,11 @@ public class ValidationRule2 extends ValidationBase implements ValidationRuleBas
 			}
 			validationErrors.add(CommonConstants.RULE + " " + ruleName.getValue() + " " + CommonConstants.VIOLATION + "." + errorDetail);
 			auditType = AuditType.FAILURE;
+		} else {
+			// PASS
+			logger.info(this.getClass().getSimpleName() + " validationErrors [PASS]");
+			auditType = AuditType.SUCCESS;
 		}
-
 		final String auditMessage = Utils.getInstance().getAuditMessage(auditType.name(), message + ruleName.getValue() + errorDetail);
 		final Audit audit = new Audit(request.getId(), new Date(), auditType.getVal(), auditMessage);
 		validationServiceHolder.write(audit);

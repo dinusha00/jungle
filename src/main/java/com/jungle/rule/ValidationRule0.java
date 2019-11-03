@@ -36,16 +36,16 @@ public class ValidationRule0 extends ValidationBase implements ValidationRuleBas
 		String errorDetail = "";
 		RuleName ruleName;
 
-		// PROD to NON-PROD
-		ruleName = RuleName.RULE1;
-		final String sourceIpInProdList = getViolatedIps(request.getSourceIp(), validationServiceHolder);
-		final String destinationIpInNonProdList = getViolatedIps(request.getDestinationIp(), validationServiceHolder);
-		if (sourceIpInProdList.isEmpty() || destinationIpInNonProdList.isEmpty()) {
+		// OUT OF RANGE
+		ruleName = RuleName.RULE0;
+		final String sourceIpInAllList = getViolatedIps(request.getSourceIp(), validationServiceHolder);
+		final String destinationIpInAllList = getViolatedIps(request.getDestinationIp(), validationServiceHolder);
+		if (sourceIpInAllList.isEmpty() || destinationIpInAllList.isEmpty()) {
 			logger.info(this.getClass().getSimpleName() + " validationErrors [FAILED]");
-			if (sourceIpInProdList.isEmpty()) {
+			if (sourceIpInAllList.isEmpty()) {
 				errorDetail += (" (" + Type.OUT_OF_RANGE + ":" + request.getSourceIp() + ")");
 			}
-			if (destinationIpInNonProdList.isEmpty()) {
+			if (destinationIpInAllList.isEmpty()) {
 				errorDetail += (" (" + Type.OUT_OF_RANGE + ":" + request.getDestinationIp() + ")");
 			}
 			validationErrors.add(CommonConstants.RULE + " " + ruleName.getValue() + " " + CommonConstants.VIOLATION + "." + errorDetail);
