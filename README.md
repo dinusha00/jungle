@@ -45,6 +45,7 @@ Additional
 - Debug mode : --debug
 
 ## Rules
+- ValidationRule0: OUT OF RANGE
 - ValidationRule1: PROD TO NON-PROD
 - ValidationRule2: NON-PROD TO PROD
 
