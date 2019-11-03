@@ -43,10 +43,10 @@ public class ValidationRule0 extends ValidationBase implements ValidationRuleBas
 		if (sourceIpInAllList.isEmpty() || destinationIpInAllList.isEmpty()) {
 			logger.info(this.getClass().getSimpleName() + " validationErrors [FAILED]");
 			if (sourceIpInAllList.isEmpty()) {
-				errorDetail += (" (" + Type.OUT_OF_RANGE + ":" + request.getSourceIp() + ")");
+				errorDetail += (" (" + Type.OUT_OF_RANGE + "- Source :" + request.getSourceIp() + ")");
 			}
 			if (destinationIpInAllList.isEmpty()) {
-				errorDetail += (" (" + Type.OUT_OF_RANGE + ":" + request.getDestinationIp() + ")");
+				errorDetail += (" (" + Type.OUT_OF_RANGE + "- Destination:" + request.getDestinationIp() + ")");
 			}
 			validationErrors.add(CommonConstants.RULE + " " + ruleName.getValue() + " " + CommonConstants.VIOLATION + "." + errorDetail);
 			auditType = AuditType.FAILURE;
